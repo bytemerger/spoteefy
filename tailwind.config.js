@@ -1,14 +1,14 @@
 module.exports = {
   content: [
-    './src/**/*.{tsx, ts, js}',
+    './src/**/*.{tsx, ts, js}'
   ],
   theme: {
-    extend:{
-      fontFamily:{
-        Raleway:['Raleway','sans']
+    extend: {
+      fontFamily: {
+        Raleway: ['Raleway', 'sans']
       }
     }
   },
   variants: {},
-  plugins: [],
+  plugins: []
 }
