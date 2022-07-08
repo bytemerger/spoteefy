@@ -1,9 +1,14 @@
 module.exports = {
-  mode: 'jit',
   content: [
-    './src/**/*.{js,jsx,ts,tsx}'
+    './src/**/*.{tsx, ts, js}',
   ],
   theme: {
-    extends: {}
-  }
+    extend:{
+      fontFamily:{
+        Raleway:['Raleway','sans']
+      }
+    }
+  },
+  variants: {},
+  plugins: [],
 }
