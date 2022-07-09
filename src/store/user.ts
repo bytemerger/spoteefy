@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { User, AuthUserDetails } from '../types/user.type'
+import { LOCAL_STORAGE_AUTH_STATE_CODE, LOCAL_STORAGE_TOKEN } from '../types/constants'
 
 const initialState: User = {
 
@@ -51,12 +52,12 @@ export { setUserDetails }
 
 // add code to local storage without side effect in reducer
 export const setAuthStateCode = (code: string) => (dispatch) => {
-  localStorage.setItem('authStateCode', code)
+  localStorage.setItem(LOCAL_STORAGE_AUTH_STATE_CODE, code)
   dispatch(setAuthState(code))
 }
 
 export const setUserAccessToken = (user: AuthUserDetails) => (dispatch) => {
-  localStorage.setItem('userToken', user.access_token)
+  localStorage.setItem(LOCAL_STORAGE_TOKEN, user.access_token)
   dispatch(setUserToken(user))
 }
 

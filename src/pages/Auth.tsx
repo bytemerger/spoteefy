@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { setUserAccessToken, setUserDetails } from '../store/user'
+import { LOCAL_STORAGE_AUTH_STATE_CODE } from '../types/constants'
 import { useAppDispatch, useAppSelector } from '../types/hook.type'
 import { AuthUserDetails } from '../types/user.type'
 
@@ -11,7 +12,7 @@ export default function Auth () {
   // get authState from store or the localstorage
   const getAuthState = () => {
     if (!authState) {
-      authState = localStorage.getItem('authStateCode')
+      authState = localStorage.getItem(LOCAL_STORAGE_AUTH_STATE_CODE)
     }
     return authState
   }
