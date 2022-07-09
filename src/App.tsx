@@ -1,11 +1,14 @@
 import './tailwind.css'
 import React from 'react'
 import Router from './router'
+import DefaultLayout from './components/layouts/DefaultLayout'
 
 const App = () => {
   return (
     <div className=''>
-      <Router />
+      <DefaultLayout>
+        <Router />
+      </DefaultLayout>
     </div>
   )
 }
