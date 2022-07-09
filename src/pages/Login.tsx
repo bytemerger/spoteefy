@@ -1,7 +1,28 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import listenImage from '../assets/images/listenImage.svg'
 import spotifyIcon from '../assets/images/spotifyIcon.png'
+import { setAuthStateCode } from '../store/user'
+import { useAppDispatch, useAppSelector } from '../types/hook.type'
 
 function Login (): JSX.Element {
+  const user = useAppSelector((state) => state.user)
+  const dispatch = useAppDispatch()
+
+  const navigate = useNavigate()
+
+  const spotifyLogin = () => {
+    const state = Math.random().toString(36).substring(6)
+    dispatch(setAuthStateCode(state))
+    const uri = `${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&state=${state}`
+    window.location.replace(uri)
+  }
+
+  useEffect(() => {
+    if (user?.id) {
+      navigate('/home')
+    }
+  }, [user])
   return (
     <div className='min-h-screen bg-[#06132D] font-Raleway text-white'>
       <div className='sm:mx-auto mx-5 pt-5 sm:w-1/2 text-center'>
@@ -19,7 +40,7 @@ function Login (): JSX.Element {
           </div>
           <div className='mt-8 flex items-center justify-center sm:block'>
             <div className='text-center'>
-              <div className='py-4 px-10 border rounded-xl border-white w-44 text-center bg-transparent  hover:border hover:border-purple-300 cursor-pointer'>
+              <div className='py-4 px-10 border rounded-xl border-white w-44 text-center bg-transparent  hover:border hover:border-purple-300 cursor-pointer' onClick={spotifyLogin}>
                 <div className='flex items-center'>
                   <img src={spotifyIcon} alt='' width={24} height={24} />
                   <a className='font-Inter text-base font-semibold leading-5 text-white ml-3'>Login</a>
@@ -29,6 +50,7 @@ function Login (): JSX.Element {
           </div>
         </div>
       </div>
+      {}
     </div>
   )
 }
