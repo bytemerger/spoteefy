@@ -12,6 +12,8 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 
 const HtmlWebPackPlugin = require('html-webpack-plugin')
 
+const Dotenv = require('dotenv-webpack')
+
 const packageFolder = path.resolve(__dirname, 'build')
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -147,7 +149,9 @@ module.exports = {
       filename: 'assets/css/[name].min.css'
     }),
 
-    process.env.ANALYZE && new BundleAnalyzerPlugin()
+    process.env.ANALYZE && new BundleAnalyzerPlugin(),
+
+    new Dotenv()
 
   ].filter(Boolean),
 
