@@ -2,7 +2,7 @@ import { Image } from './image.type'
 
 export interface User {
   id?: string
-  token?: string
+  token?: string | null
   display_name?: string
   images?: Image[]
   type?: string

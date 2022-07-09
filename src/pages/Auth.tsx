@@ -35,8 +35,8 @@ export default function Auth () {
   }
 
   const setUser = (user: AuthUserDetails) => {
-    dispatch(setUserAccessToken(user))
-    dispatch(setUserDetails(user))
+    // dispatch(setUserAccessToken(user))
+    return dispatch(setUserDetails(user))
   }
   useEffect(() => {
     if (checkAuthState()) {
@@ -45,7 +45,7 @@ export default function Auth () {
       return
     }
     setUser(getAuthDetails())
-    navigate('/home')
+      .finally(() => navigate('/home'))
   }, [getAuthDetails()])
   return (
     error
