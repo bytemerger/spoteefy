@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import spotiIcon from '../../assets/images/spotifyIcon.png'
+import { useAppSelector } from '../../types/hook.type'
 
 const ButtonGroup = () => {
   return (
@@ -18,12 +19,17 @@ const ButtonGroup = () => {
   )
 }
 function Navbar () {
+  const username = useAppSelector((state) => state.user.display_name)
+  const userImage = useAppSelector((state) => {
+    if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
+    return undefined
+  })
   return (
     <div className='flex flex-col sm:flex-row justify-between pt-5 sm:pt-10 sm:items-center'>
       <div className='flex items-center justify-between'>
         <div className='flex items-center'>
-          <img src={spotiIcon} alt='' width={35} height={35} />
-          <span className='hidden sm:block'>Username</span>
+          <img src={userImage || spotiIcon} alt='' width={35} height={35} />
+          <span className='hidden sm:block text-white/80 ml-2'>{username}</span>
         </div>
         <div className='items-center flex sm:hidden'>
           <ButtonGroup />

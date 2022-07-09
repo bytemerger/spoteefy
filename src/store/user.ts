@@ -1,10 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { User, AuthUserDetails } from '../types/user.type'
-import { LOCAL_STORAGE_AUTH_STATE_CODE, LOCAL_STORAGE_TOKEN } from '../types/constants'
+import { LOCAL_STORAGE_AUTH_STATE_CODE, LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_USER } from '../types/constants'
 
+const getUserInfo = () => {
+  const userInfo = localStorage.getItem(LOCAL_STORAGE_USER)
+  if (userInfo) return JSON.parse(userInfo)
+}
 const initialState: User = {
-  token: localStorage.getItem(LOCAL_STORAGE_TOKEN)
+  token: localStorage.getItem(LOCAL_STORAGE_TOKEN),
+  ...getUserInfo()
 }
 
 const setUserDetails = createAsyncThunk('get/userDetails', async (user: AuthUserDetails, { dispatch, rejectWithValue }) => {
@@ -24,7 +29,11 @@ const setUserDetails = createAsyncThunk('get/userDetails', async (user: AuthUser
     // set token when fetch is successful
     setUserAccessToken(user)(dispatch)
     const { id, display_name, images } = await request.json()
-    return { id, display_name, images }
+
+    const userInfo = { id, display_name, images }
+
+    localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(userInfo))
+    return userInfo
   } catch (error) {
     return rejectWithValue('Opps there seems to be an error')
   }
