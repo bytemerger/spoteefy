@@ -4,7 +4,7 @@ import { User, AuthUserDetails } from '../types/user.type'
 import { LOCAL_STORAGE_AUTH_STATE_CODE, LOCAL_STORAGE_TOKEN } from '../types/constants'
 
 const initialState: User = {
-
+  token: localStorage.getItem(LOCAL_STORAGE_TOKEN)
 }
 
 const setUserDetails = createAsyncThunk('get/userDetails', async (user: AuthUserDetails, { dispatch, rejectWithValue }) => {
@@ -40,8 +40,8 @@ export const userSlice = createSlice({
     setUserToken: (state, action: PayloadAction<Pick<AuthUserDetails, 'access_token'> | null>) => {
       state.token = (action.payload != null) ? action.payload.access_token : null
     },
-    clearAppError: (state) => {
-      state.error = null
+    setAppError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload
     }
   },
   extraReducers: {
@@ -54,9 +54,9 @@ export const userSlice = createSlice({
   }
 })
 
-const { setAuthState, setUserToken, clearAppError } = userSlice.actions
+const { setAuthState, setUserToken, setAppError } = userSlice.actions
 
-export { setUserDetails, clearAppError }
+export { setUserDetails, setAppError }
 
 // add code to local storage without side effect in reducer
 export const setAuthStateCode = (code: string) => (dispatch) => {

@@ -1,4 +1,4 @@
-import { clearAppError } from '../../store/user'
+import { setAppError } from '../../store/user'
 import { useAppDispatch, useAppSelector } from '../../types/hook.type'
 
 interface props{
@@ -8,7 +8,7 @@ function DefaultLayout ({ children }: props) {
   const error = useAppSelector((state) => state.user.error)
   const dispatch = useAppDispatch()
   const clearError = () => {
-    dispatch(clearAppError())
+    dispatch(setAppError(null))
   }
   return (
     <>
