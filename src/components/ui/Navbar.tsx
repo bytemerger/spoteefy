@@ -5,9 +5,9 @@ const ButtonGroup = () => {
   return (
     <>
       <Link to='/library'>
-        <a className='bg-spoteefy-green text-white rounded-lg py-1.5 px-3.5 sm:py-3 sm:px-5 font-Raleway text-base font-medium sm:font-semibold'>
+        <span className='bg-spoteefy-green text-white rounded-lg py-1.5 px-3.5 sm:py-3 sm:px-5 font-Raleway text-base font-medium sm:font-semibold'>
           Library
-        </a>
+        </span>
       </Link>
       <div className='py-1 px-4 sm:py-3 sm:px-5 border rounded-xl border-white w-28 text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none'>
         <div className='text-center'>
