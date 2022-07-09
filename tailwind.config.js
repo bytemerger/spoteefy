@@ -6,6 +6,9 @@ module.exports = {
     extend: {
       fontFamily: {
         Raleway: ['Raleway', 'sans']
+      },
+      colors: {
+        'spoteefy-green': '#1DB954'
       }
     }
   },
