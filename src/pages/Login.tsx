@@ -20,7 +20,7 @@ function Login (): JSX.Element {
   }
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.token) {
       navigate('/home')
     }
   }, [user])

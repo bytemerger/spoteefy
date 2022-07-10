@@ -7,13 +7,15 @@ async function AppRequest (url: string, token: string, method = 'GET', body?: Re
     },
     body: JSON.stringify(body)
   })
+  const json = await request.json()
   if (request.ok) {
-    return (await request.json())
+    return json
   }
   // if there is an auth error
   if (request.status.toString().startsWith('40')) {
-    return await Promise.reject('Auth Error')
+    if (request.status !== 404) { return await Promise.reject('Auth Error') }
   }
+  return await Promise.reject(json.error.message)
 }
 function debounce (func, timeout = 300) {
   let timer
