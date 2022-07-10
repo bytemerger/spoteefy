@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import spotiIcon from '../../assets/images/spotifyIcon.png'
+import { debounce } from '../../libs'
 import { useAppSelector } from '../../types/hook.type'
 
 const ButtonGroup = () => {
@@ -18,7 +19,13 @@ const ButtonGroup = () => {
     </>
   )
 }
-function Navbar () {
+function Navbar ({ setSearch }) {
+  // debouce the search to reduce api calls
+  const debouncedSearch = debounce(setSearch, 300)
+
+  const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(event.currentTarget.value)
+  }
   const username = useAppSelector((state) => state.user.display_name)
   const userImage = useAppSelector((state) => {
     if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
@@ -36,7 +43,7 @@ function Navbar () {
         </div>
       </div>
       <div className='mt-4 sm:mt-0'>
-        <input type='text' className='font-Raleway font-light text-base leading-5 md:w-[522px] w-full text-[#d0d2d6] rounded-full h-8 sm:h-12 sm:px-3 px-3 outline-none bg-[#646165]' placeholder='search...' />
+        <input type='text' className='font-Raleway font-light text-base leading-5 md:w-[522px] w-full text-[#d0d2d6] rounded-full h-8 sm:h-12 sm:px-3 px-3 outline-none bg-[#646165]' placeholder='search...' onChange={onSearchChange} />
       </div>
       <div className='items-center hidden sm:flex'>
         <ButtonGroup />

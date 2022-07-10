@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import listenImage from '../assets/images/listenImage.svg'
 import spotifyIcon from '../assets/images/spotifyIcon.png'
 import { setAuthStateCode } from '../store/user'
+import { SPOTIFY_SCOPE } from '../types/constants'
 import { useAppDispatch, useAppSelector } from '../types/hook.type'
 
 function Login (): JSX.Element {
@@ -14,7 +15,7 @@ function Login (): JSX.Element {
   const spotifyLogin = () => {
     const state = Math.random().toString(36).substring(6)
     dispatch(setAuthStateCode(state))
-    const uri = `${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&state=${state}`
+    const uri = `${process.env.REACT_APP_AUTH_ENDPOINT}?client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&response_type=${process.env.REACT_APP_RESPONSE_TYPE}&state=${state}&scope=${SPOTIFY_SCOPE}`
     window.location.replace(uri)
   }
 

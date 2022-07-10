@@ -10,3 +10,6 @@
 .text-green-border{
     text-shadow: -2px 0 #1DB954, 0 2px #1DB954, 2px 0 #1DB954, 0 -2px #1DB954
 }
+body{
+    background-color: black;
+}
