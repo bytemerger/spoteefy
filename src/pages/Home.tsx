@@ -19,7 +19,6 @@ function Home (): JSX.Element {
   const getNewRelease = async () => {
     if (token) {
       const { items } = (await AppRequest('/browse/new-releases', token)).albums
-      console.log(items)
       return items
     }
   }
@@ -30,8 +29,24 @@ function Home (): JSX.Element {
       return items
     }
   }
+
+  const getSearchSongs = async (q: string) => {
+    if (token) {
+      const { items } = (await AppRequest(`/search?q=${q}&type=track`, token)).tracks
+      return items
+    }
+  }
   useEffect(() => {
-    console.log(search)
+    if (search) {
+      getSearchSongs(search).then(songs => setDisplaySongs(songs))
+        .catch(error => {
+          if (error === 'Auth Error') {
+            dispatch(deleteUserAccessToken())
+            dispatch(setAppError('Authentication Error Please Login again!!'))
+            navigate('/')
+          }
+        })
+    }
   }, [search])
 
   useEffect(() => {
@@ -46,7 +61,7 @@ function Home (): JSX.Element {
             ({
               ...item,
               album: {
-                artist: item.artists,
+                artists: item.artists,
                 images: defaultItem.images,
                 name: defaultItem.name,
                 release_date: defaultItem.release_date
@@ -72,10 +87,10 @@ function Home (): JSX.Element {
           <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} />
         )}
       </div>
-      <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search ? 'Search Results...' : 'Most Recent Tracks'}</div>
+      <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search !== null ? 'Search Results...' : 'Most Recent Tracks'}</div>
       <div className='flex flex-col'>
         {displaySongs?.map((songItem, index) =>
-          <SongItem index={index} {...songItem} />
+          <SongItem index={index} {...songItem} key={songItem.id} />
         )}
       </div>
       <div className='text-sm text-white/80 font font-Raleway pt-10 pb-5 text-center'>😋 Enjoy your time</div>

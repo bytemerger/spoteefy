@@ -21,7 +21,7 @@ export interface Song{
   uri: string
   album: {
     album_type: 'album' | 'single'
-    artist: Artists[]
+    artists: Artists[]
     name: string
     release_date: string
     images: Image[]

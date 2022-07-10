@@ -6,7 +6,7 @@ interface props extends Song{
   index: Number
 }
 function SongItem ({ index, album, name, duration_ms }: props) {
-  const artistsName = album.artist.reduce((acc, prev, index) => {
+  const artistsName = album.artists.reduce((acc, prev, index) => {
     return `${acc} ${index > 0 ? '&' : ''} ${prev.name}`
   }, '')
   return (

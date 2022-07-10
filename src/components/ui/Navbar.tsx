@@ -35,7 +35,7 @@ function Navbar ({ setSearch }) {
   })
 
   // debouce the search to reduce api calls
-  const debouncedSearch = debounce(setSearch, 300)
+  const debouncedSearch = debounce(setSearch, 500)
 
   const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     debouncedSearch(event.currentTarget.value)
