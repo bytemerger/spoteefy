@@ -51,6 +51,9 @@ export const userSlice = createSlice({
     },
     setAppError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload
+    },
+    resetState: (state) => {
+      return {} as User
     }
   },
   extraReducers: {
@@ -63,7 +66,7 @@ export const userSlice = createSlice({
   }
 })
 
-const { setAuthState, setUserToken, setAppError } = userSlice.actions
+const { setAuthState, setUserToken, setAppError, resetState } = userSlice.actions
 
 export { setUserDetails, setAppError }
 
@@ -81,6 +84,11 @@ export const setUserAccessToken = (user: AuthUserDetails) => (dispatch) => {
 export const deleteUserAccessToken = () => (dispatch) => {
   localStorage.removeItem(LOCAL_STORAGE_TOKEN)
   dispatch(setUserToken(null))
+}
+export const logoutUser = () => (dispatch) => {
+  deleteUserAccessToken()(dispatch)
+  dispatch(resetState())
+  localStorage.clear()
 }
 
 export default userSlice.reducer

@@ -1,9 +1,17 @@
-import { Link } from 'react-router-dom'
+import { useCallback } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import spotiIcon from '../../assets/images/spotifyIcon.png'
 import { debounce } from '../../libs'
-import { useAppSelector } from '../../types/hook.type'
+import { logoutUser } from '../../store/user'
+import { useAppDispatch, useAppSelector } from '../../types/hook.type'
 
 const ButtonGroup = () => {
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const logout = useCallback(() => {
+    dispatch(logoutUser())
+    navigate('/')
+  }, [])
   return (
     <>
       <Link to='/library'>
@@ -11,7 +19,7 @@ const ButtonGroup = () => {
           Library
         </span>
       </Link>
-      <div className='py-1 px-4 sm:py-3 sm:px-5 border rounded-xl border-white w-28 text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none'>
+      <div className='py-1 px-4 sm:py-3 sm:px-5 border rounded-xl border-white w-28 text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none' onClick={logout}>
         <div className='text-center'>
           <a className='font-Raleway text-base leading-5 text-white sm:font-semibold'>Logout</a>
         </div>
@@ -20,17 +28,18 @@ const ButtonGroup = () => {
   )
 }
 function Navbar ({ setSearch }) {
+  const username = useAppSelector((state) => state.user.display_name)
+  const userImage = useAppSelector((state) => {
+    if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
+    return undefined
+  })
+
   // debouce the search to reduce api calls
   const debouncedSearch = debounce(setSearch, 300)
 
   const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     debouncedSearch(event.currentTarget.value)
   }
-  const username = useAppSelector((state) => state.user.display_name)
-  const userImage = useAppSelector((state) => {
-    if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
-    return undefined
-  })
   return (
     <div className='flex flex-col sm:flex-row justify-between pt-5 sm:pt-10 sm:items-center'>
       <div className='flex items-center justify-between'>
