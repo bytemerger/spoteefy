@@ -6,6 +6,7 @@ export interface NewRelease{
   images: Image[]
   name: string
   type: 'album' | 'single'
+  album_type: 'album' | 'single' 
   release_date?: string
   total_tracks: Number
 }

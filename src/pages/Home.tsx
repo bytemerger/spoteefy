@@ -35,7 +35,7 @@ function Home (): JSX.Element {
       <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>New Releases</div>
       <div className='flex flex-nowrap mt-4 overflow-x-scroll gap-4'>
         {newRelease?.map((releaseItem, index) =>
-          <NewReleasesItem {...releaseItem} key={`${releaseItem.uri}${index}`} />
+          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} />
         )}
       </div>
     </div>
