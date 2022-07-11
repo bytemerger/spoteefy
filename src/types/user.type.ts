@@ -5,7 +5,7 @@ export interface User {
   token?: string | null
   display_name?: string
   images?: Image[]
-  type?: string
+  library: string[]
   authStateCode?: string | null
   error?: string | null
 }

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { User, AuthUserDetails } from '../types/user.type'
 import { LOCAL_STORAGE_AUTH_STATE_CODE, LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_USER } from '../types/constants'
+import * as libraryService from '../services/library'
 
 const getUserInfo = () => {
   const userInfo = localStorage.getItem(LOCAL_STORAGE_USER)
@@ -32,8 +33,14 @@ const setUserDetails = createAsyncThunk('get/userDetails', async (user: AuthUser
 
     const userInfo = { id, display_name, images }
 
+    let library = await libraryService.getOrCreateLibrary(id)
+
+    if (!library) {
+      library = []
+    }
+
     localStorage.setItem(LOCAL_STORAGE_USER, JSON.stringify(userInfo))
-    return userInfo
+    return { ...userInfo, library }
   } catch (error) {
     return rejectWithValue('Opps there seems to be an error')
   }
