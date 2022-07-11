@@ -5,7 +5,9 @@ import { debounce } from '../../libs'
 import { logoutUser } from '../../store/user'
 import { useAppDispatch, useAppSelector } from '../../types/hook.type'
 
-const ButtonGroup = () => {
+type Page = 'library' | 'home'
+
+const ButtonGroup = ({ page }: {page: Page}) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const logout = useCallback(() => {
@@ -14,12 +16,20 @@ const ButtonGroup = () => {
   }, [])
   return (
     <>
-      <Link to='/library'>
+      {page === 'library' &&
+        <div className='py-0.5 px-2 sm:py-3 sm:px-5 border rounded-xl border-white text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none mr-3' onClick={logout}>
+          <div className='flex items-center'>
+            <img src={spotiIcon} width={24} height={24} />
+            <a className='font-Raleway text-base leading-5 text-white sm:font-semibold'>Export</a>
+          </div>
+        </div>}
+      <Link to={page === 'home' ? '/library' : '/home'}>
         <span className='bg-spoteefy-green text-white rounded-lg py-1.5 px-3.5 sm:py-3 sm:px-5 font-Raleway text-base font-medium sm:font-semibold'>
-          Library
+          {page === 'home' && 'library'}
+          {page === 'library' && 'home'}
         </span>
       </Link>
-      <div className='py-1 px-4 sm:py-3 sm:px-5 border rounded-xl border-white w-28 text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none' onClick={logout}>
+      <div className='py-1 px-4 sm:py-3 sm:px-5 border rounded-xl border-white text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none' onClick={logout}>
         <div className='text-center'>
           <a className='font-Raleway text-base leading-5 text-white sm:font-semibold'>Logout</a>
         </div>
@@ -27,7 +37,7 @@ const ButtonGroup = () => {
     </>
   )
 }
-function Navbar ({ setSearch }) {
+function Navbar ({ setSearch, page = 'home' }: { setSearch?: React.Dispatch<React.SetStateAction<string | null>>, page?: Page}) {
   const username = useAppSelector((state) => state.user.display_name)
   const userImage = useAppSelector((state) => {
     if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
@@ -48,14 +58,17 @@ function Navbar ({ setSearch }) {
           <span className='hidden sm:block text-white/80 ml-2'>{username}</span>
         </div>
         <div className='items-center flex sm:hidden'>
-          <ButtonGroup />
+          <ButtonGroup page={page} />
         </div>
       </div>
-      <div className='mt-4 sm:mt-0'>
-        <input type='text' className='font-Raleway font-light text-base leading-5 md:w-[522px] w-full text-[#d0d2d6] rounded-full h-8 sm:h-12 sm:px-3 px-3 outline-none bg-[#646165]' placeholder='search...' onChange={onSearchChange} />
-      </div>
+      {
+      page === 'home' &&
+        <div className='mt-4 sm:mt-0'>
+          <input type='text' className='font-Raleway font-light text-base leading-5 md:w-[522px] w-full text-[#d0d2d6] rounded-full h-8 sm:h-12 sm:px-3 px-3 outline-none bg-[#646165]' placeholder='search...' onChange={onSearchChange} />
+        </div>
+      }
       <div className='items-center hidden sm:flex'>
-        <ButtonGroup />
+        <ButtonGroup page={page} />
       </div>
     </div>
   )

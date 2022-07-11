@@ -5,7 +5,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        Raleway: ['Raleway', 'sans']
+        Raleway: ['Raleway', 'sans'],
+        Swash: ['Berkshire Swash']
       },
       colors: {
         'spoteefy-green': '#1DB954'
