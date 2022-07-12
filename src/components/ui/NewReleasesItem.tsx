@@ -2,7 +2,7 @@ import { addToLibrary, removeFromLibrary } from '../../store/user'
 import { useAppDispatch, useAppSelector } from '../../types/hook.type'
 import { NewRelease } from '../../types/songs.types'
 
-function NewReleasesItem ({ id, images, name, type, total_tracks, favourite }: NewRelease) {
+function NewReleasesItem ({ id, images, name, type, total_tracks, favourite }: NewRelease & {favourite: boolean}) {
   const dispatch = useAppDispatch()
   return (
     <div className='relative rounded-2xl w-64 h-56 flex-shrink-0' style={{ backgroundImage: `url('${images[1].url}')` }}>

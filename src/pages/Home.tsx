@@ -94,7 +94,7 @@ function Home (): JSX.Element {
       <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search !== null ? 'Search Results...' : 'Most Recent Tracks'}</div>
       <div className='flex flex-col'>
         {displaySongs?.map((songItem, index) =>
-          <SongItem index={index} {...songItem} key={songItem.id} />
+          <SongItem index={index} {...songItem} key={songItem.id} favourite={librarySongs.includes(songItem.id)} />
         )}
       </div>
       <div className='text-sm text-white/80 font font-Raleway pt-10 pb-5 text-center'>😋 Enjoy your time</div>

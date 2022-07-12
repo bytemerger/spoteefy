@@ -1,11 +1,15 @@
 import { milliSecondsToMinSec } from '../../libs'
+import { addToLibrary, removeFromLibrary } from '../../store/user'
+import { useAppDispatch } from '../../types/hook.type'
 import { Image } from '../../types/image.type'
 import { Song } from '../../types/songs.types'
 
 interface props extends Song{
   index: Number
+  favourite: boolean
 }
-function SongItem ({ index, album, name, duration_ms }: props) {
+function SongItem ({ id, index, album, name, duration_ms, favourite }: props) {
+  const dispatch = useAppDispatch()
   const artistsName = album.artists.reduce((acc, prev, index) => {
     return `${acc} ${index > 0 ? '&' : ''} ${prev.name}`
   }, '')
@@ -26,7 +30,11 @@ function SongItem ({ index, album, name, duration_ms }: props) {
         <span>{album.release_date}</span>
         <span>{milliSecondsToMinSec(duration_ms)}</span>
       </div>
-      <div className='text-red-500 cursor-pointer text-xl'> &#9825; </div>
+      {
+        favourite
+          ? <div className='text-red-500 cursor-pointer text-xl' onClick={() => dispatch(removeFromLibrary(id))}> &hearts; </div>
+          : <div className='text-red-500 cursor-pointer text-xl' onClick={() => dispatch(addToLibrary(id))}> &#9825; </div>
+      }
     </div>
   )
 }

@@ -9,7 +9,6 @@ export interface NewRelease{
   album_type: 'album' | 'single'
   release_date?: string
   total_tracks: Number
-  favourite: boolean
 }
 
 interface Artists{
