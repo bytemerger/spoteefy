@@ -20,7 +20,7 @@ function RequireAuth ({ children }: props) {
     setTimeout(() => {
       setError('error')
     }, 2000)
-    return <div>Please login!!!! you will be redirected to login....{error && <Navigate to='/' />}</div>
+    return <div className='text-white/70'>Please login!!!! you will be redirected to login....{error && <Navigate to='/' />}</div>
   }
   return (
     <>

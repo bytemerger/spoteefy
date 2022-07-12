@@ -49,10 +49,10 @@ export default function Auth () {
   }, [getAuthDetails()])
   return (
     error
-      ? <div className='w-1/2 mx-auto mt-10'>
+      ? <div className='w-1/2 mx-auto mt-10 text-white'>
         <span>{error}</span>
         <Link to='/'>
-          <a> try again</a>
+          <span> try again</span>
         </Link>
       </div>
       : <></>
