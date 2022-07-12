@@ -95,9 +95,10 @@ function Home (): JSX.Element {
     <div className='md:px-40 px-3 bg-black/90 min-h-screen'>
       <Navbar setSearch={setSearch} />
       <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>New Album Releases</div>
+      <div className='font-Raleway font-bold text-xs text-white/40'>Select to view songs</div>
       <div className='flex flex-nowrap mt-4 overflow-x-scroll gap-4'>
         {newRelease?.map((releaseItem, index) =>
-          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} favourite={librarySongs.includes(releaseItem.id)} selectAlbum={setAlbumSelection} />
+          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} selectAlbum={setAlbumSelection} />
         )}
       </div>
       <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search !== null ? 'Search Results...' : 'Most Recent... Album Tracks'}</div>
