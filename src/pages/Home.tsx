@@ -4,7 +4,7 @@ import Navbar from '../components/ui/Navbar'
 import NewReleasesItem from '../components/ui/NewReleasesItem'
 import SongItem from '../components/ui/SongItem'
 import { AppRequest } from '../libs'
-import { deleteUserAccessToken, setAppError } from '../store/user'
+import { deleteUserAccessToken, setAppError, setUserLibrary } from '../store/user'
 import { useAppDispatch, useAppSelector } from '../types/hook.type'
 import { NewRelease, Song } from '../types/songs.types'
 
@@ -12,6 +12,7 @@ function Home (): JSX.Element {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const token = useAppSelector((state) => state.user.token)
+  const librarySongs = useAppSelector((state) => state.user.library)
   const [newRelease, setNewRelease] = useState<NewRelease[]>()
   const [search, setSearch] = useState<string | null>(null)
   const [displaySongs, setDisplaySongs] = useState<Song[]>([])
@@ -50,6 +51,9 @@ function Home (): JSX.Element {
   }, [search])
 
   useEffect(() => {
+    if (librarySongs.length < 1) {
+      dispatch(setUserLibrary())
+    }
     getNewRelease()
       .then((items) => {
         setNewRelease(items)
@@ -84,7 +88,7 @@ function Home (): JSX.Element {
       <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>New Releases</div>
       <div className='flex flex-nowrap mt-4 overflow-x-scroll gap-4'>
         {newRelease?.map((releaseItem, index) =>
-          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} />
+          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} favourite={librarySongs.includes(releaseItem.id)} />
         )}
       </div>
       <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search !== null ? 'Search Results...' : 'Most Recent Tracks'}</div>

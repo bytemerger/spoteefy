@@ -3,6 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 import { User, AuthUserDetails } from '../types/user.type'
 import { LOCAL_STORAGE_AUTH_STATE_CODE, LOCAL_STORAGE_TOKEN, LOCAL_STORAGE_USER } from '../types/constants'
 import * as libraryService from '../services/library'
+import { RootState, store } from '.'
 
 const getUserInfo = () => {
   const userInfo = localStorage.getItem(LOCAL_STORAGE_USER)
@@ -10,6 +11,7 @@ const getUserInfo = () => {
 }
 const initialState: User = {
   token: localStorage.getItem(LOCAL_STORAGE_TOKEN),
+  library: [],
   ...getUserInfo()
 }
 
@@ -46,6 +48,35 @@ const setUserDetails = createAsyncThunk('get/userDetails', async (user: AuthUser
   }
 })
 
+// ---Adding and removing firestore library--
+const setUserLibrary = createAsyncThunk<string[], never, {state: {user: User}}>('set/library', async (_, { getState, rejectWithValue }) => {
+  try {
+    let library = await libraryService.getOrCreateLibrary(getState().user.id!)
+    if (!library) {
+      library = []
+    }
+    return library
+  } catch (error) {
+    rejectWithValue(`error occured${error.message}`)
+  }
+})
+const addToLibrary = createAsyncThunk<any, string, {state: {user: User}}>('add/library', async (songId: string, { getState, rejectWithValue }) => {
+  try {
+    await libraryService.addToLibrary(getState().user.id!, songId)
+    return songId
+  } catch (error) {
+    rejectWithValue(`error occured${error.message}`)
+  }
+})
+const removeFromLibrary = createAsyncThunk<any, string, {state: {user: User}}>('remove/library', async (songId: string, { getState, rejectWithValue }) => {
+  try {
+    await libraryService.removeFromLibrary(getState().user.id!, songId)
+    return songId
+  } catch (error) {
+    rejectWithValue(`error occured${error.message}`)
+  }
+})
+
 export const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -61,6 +92,9 @@ export const userSlice = createSlice({
     },
     resetState: (state) => {
       return {} as User
+    },
+    setLibrary: (state, action: PayloadAction<string[]>) => {
+      state.library = action.payload
     }
   },
   extraReducers: {
@@ -69,13 +103,31 @@ export const userSlice = createSlice({
     },
     [setUserDetails.fulfilled.type]: (state, action: PayloadAction<Pick<User, 'display_name'|'id'|'images'>>) => {
       return { ...state, ...action.payload }
+    },
+    [setUserLibrary.fulfilled.type]: (state, action: PayloadAction<string[]>) => {
+      state.library = action.payload
+    },
+    [setUserLibrary.rejected.type]: (state, action) => {
+      state.error = action.payload
+    },
+    [addToLibrary.fulfilled.type]: (state, action: PayloadAction<string>) => {
+      state.library.push(action.payload)
+    },
+    [addToLibrary.rejected.type]: (state, action) => {
+      state.error = action.payload
+    },
+    [removeFromLibrary.fulfilled.type]: (state, action: PayloadAction<string>) => {
+      state.library = state.library.slice().filter(id => id !== action.payload)
+    },
+    [removeFromLibrary.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
     }
   }
 })
 
 const { setAuthState, setUserToken, setAppError, resetState } = userSlice.actions
 
-export { setUserDetails, setAppError }
+export { setUserDetails, setAppError, setUserLibrary, addToLibrary, removeFromLibrary }
 
 // add code to local storage without side effect in reducer
 export const setAuthStateCode = (code: string) => (dispatch) => {
