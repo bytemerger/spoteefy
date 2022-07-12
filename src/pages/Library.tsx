@@ -1,7 +1,16 @@
 import Navbar from '../components/ui/Navbar'
 import libraryImage from '../assets/images/libraryImage.jpg'
+import { useAppSelector } from '../types/hook.type'
+import { AppRequest } from '../libs'
 
 function Library (): JSX.Element {
+  const token = useAppSelector((state) => state.user.token)
+  const getLibrarySongInfo = async () => {
+    if (token) {
+      const { items } = (await AppRequest('', token)).albums
+      return items
+    }
+  }
   return (
     <div className='md:px-40 px-3 bg-black/90 min-h-screen'>
       <Navbar page='library' />

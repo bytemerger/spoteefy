@@ -14,6 +14,7 @@ function Home (): JSX.Element {
   const token = useAppSelector((state) => state.user.token)
   const librarySongs = useAppSelector((state) => state.user.library)
   const [newRelease, setNewRelease] = useState<NewRelease[]>()
+  const [albumSelection, setAlbumSelection] = useState<Pick<NewRelease, 'id'|'images'|'name'|'release_date' >>()
   const [search, setSearch] = useState<string | null>(null)
   const [displaySongs, setDisplaySongs] = useState<Song[]>([])
 
@@ -51,28 +52,36 @@ function Home (): JSX.Element {
   }, [search])
 
   useEffect(() => {
+    if (albumSelection != null) {
+    // clear search
+      setSearch(null)
+      getDefaultSongs(albumSelection.id).then((displayItems) => {
+      // regularize the songs to fit the display songs type
+        displayItems = displayItems.map((item) =>
+          ({
+            ...item,
+            album: {
+              artists: item.artists,
+              images: albumSelection.images,
+              name: albumSelection.name,
+              release_date: albumSelection.release_date
+            }
+          }) as Song)
+        setDisplaySongs(displayItems)
+      })
+    }
+  }, [albumSelection])
+
+  useEffect(() => {
     if (librarySongs.length < 1) {
       dispatch(setUserLibrary())
     }
     getNewRelease()
       .then((items) => {
         setNewRelease(items)
-        // find first album and use as default
+        // find first album and use as default to list some new release
         const defaultItem = items.find((item) => item.album_type === 'album') as NewRelease
-        getDefaultSongs(defaultItem.id).then((displayItems) => {
-          // regularize the songs to fit the display songs type
-          displayItems = displayItems.map((item) =>
-            ({
-              ...item,
-              album: {
-                artists: item.artists,
-                images: defaultItem.images,
-                name: defaultItem.name,
-                release_date: defaultItem.release_date
-              }
-            }) as Song)
-          setDisplaySongs(displayItems)
-        })
+        setAlbumSelection(defaultItem)
       })
       .catch(error => {
         if (error === 'Auth Error') {
@@ -85,13 +94,13 @@ function Home (): JSX.Element {
   return (
     <div className='md:px-40 px-3 bg-black/90 min-h-screen'>
       <Navbar setSearch={setSearch} />
-      <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>New Releases</div>
+      <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>New Album Releases</div>
       <div className='flex flex-nowrap mt-4 overflow-x-scroll gap-4'>
         {newRelease?.map((releaseItem, index) =>
-          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} favourite={librarySongs.includes(releaseItem.id)} />
+          <NewReleasesItem {...releaseItem} type={releaseItem.album_type} key={`${releaseItem.uri}${index}`} favourite={librarySongs.includes(releaseItem.id)} selectAlbum={setAlbumSelection} />
         )}
       </div>
-      <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search !== null ? 'Search Results...' : 'Most Recent Tracks'}</div>
+      <div className='font-Raleway font-bold text-2xl text-white/80 mt-8'>{search !== null ? 'Search Results...' : 'Most Recent... Album Tracks'}</div>
       <div className='flex flex-col'>
         {displaySongs?.map((songItem, index) =>
           <SongItem index={index} {...songItem} key={songItem.id} favourite={librarySongs.includes(songItem.id)} />
