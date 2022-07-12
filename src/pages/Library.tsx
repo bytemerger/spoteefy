@@ -33,37 +33,37 @@ function Library (): JSX.Element {
     }
   }
   const createPlaylist = async (userId: string, name: string) => {
-    if(token){
+    if (token) {
       const app = await AppRequest(`/users/${userId}/playlists`, token, 'POST', {
-          "name": `${name}`,
-          "description": "New playlist from spoteefy",
-          "public": true
+        name: `${name}`,
+        description: 'New playlist from spoteefy',
+        public: true
       })
       return app
     }
   }
   const addSongsToPlaylist = async (id: string) => {
-    if(token){
+    if (token) {
       const app = await AppRequest(`/playlists/${id}/tracks?uris=${
-        myLibrarySongs?.reduce((acc, val, index)=> {
-           return `${acc}${index !==0 ? ',' : ''}${val.uri}`
-          },'')
+        myLibrarySongs?.reduce((acc, val, index) => {
+           return `${acc}${index !== 0 ? ',' : ''}${val.uri}`
+          }, '')
       }`, token, 'POST')
       return app
     }
   }
-  const exportLibrary =()=>{
-      const playlist = prompt('Please type in the playlist name')
-    if (userId && playlist){
+  const exportLibrary = () => {
+    const playlist = prompt('Please type in the playlist name')
+    if (userId && playlist) {
       createPlaylist(userId, playlist).then((data) => {
         addSongsToPlaylist(data.id)
-        .then(() => alert("Playlist has been exported"))
+          .then(() => alert('Playlist has been exported'))
       }).catch(err => {
-        if(err === 'Auth Error'){
+        if (err === 'Auth Error') {
           dispatch(deleteUserAccessToken())
           dispatch(setAppError('Authentication Error Please Login again!!'))
           navigate('/')
-      }
+        }
       })
     }
   }

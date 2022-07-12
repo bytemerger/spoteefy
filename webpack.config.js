@@ -151,7 +151,9 @@ module.exports = {
 
     process.env.ANALYZE && new BundleAnalyzerPlugin(),
 
-    new Dotenv()
+    new Dotenv({
+      systemvars: true
+    })
 
   ].filter(Boolean),
 

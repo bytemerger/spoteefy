@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../types/hook.type'
 
 type Page = 'library' | 'home'
 
-const ButtonGroup = ({ page, exportLib }: {page: Page; exportLib?: ()=>void}) => {
+const ButtonGroup = ({ page, exportLib }: {page: Page, exportLib?: () => void}) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const logout = useCallback(() => {
@@ -37,7 +37,7 @@ const ButtonGroup = ({ page, exportLib }: {page: Page; exportLib?: ()=>void}) =>
     </>
   )
 }
-function Navbar ({ setSearch, page = 'home', exportLib }: { setSearch?: React.Dispatch<React.SetStateAction<string | null>>; page?: Page; exportLib?:()=>void}) {
+function Navbar ({ setSearch, page = 'home', exportLib }: { setSearch?: React.Dispatch<React.SetStateAction<string | null>>, page?: Page, exportLib?: () => void}) {
   const username = useAppSelector((state) => state.user.display_name)
   const userImage = useAppSelector((state) => {
     if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
@@ -58,7 +58,7 @@ function Navbar ({ setSearch, page = 'home', exportLib }: { setSearch?: React.Di
           <span className='hidden sm:block text-white/80 ml-2'>{username}</span>
         </div>
         <div className='items-center flex sm:hidden'>
-          <ButtonGroup page={page} exportLib = {exportLib} />
+          <ButtonGroup page={page} exportLib={exportLib} />
         </div>
       </div>
       {
