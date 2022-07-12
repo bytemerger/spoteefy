@@ -9,7 +9,7 @@ Tailwind is used for css styling
 To get started, clone the project and install the dependencies:
 
 ```
-# Using npm
+# Using Yarn
 yarn install
 ```
 
