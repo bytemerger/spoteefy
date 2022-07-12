@@ -5,13 +5,16 @@ import { useAppDispatch, useAppSelector } from '../types/hook.type'
 import { AppRequest } from '../libs'
 import { useEffect, useState } from 'react'
 import { Song } from '../types/songs.types'
-import { setUserLibrary } from '../store/user'
+import { deleteUserAccessToken, setAppError, setUserLibrary } from '../store/user'
+import { useNavigate } from 'react-router-dom'
 
 function Library (): JSX.Element {
   const token = useAppSelector((state) => state.user.token)
   const myLibrary = useAppSelector((state) => state.user.library)
+  const userId = useAppSelector((state) => state.user.id)
   const dispatch = useAppDispatch()
   const [myLibrarySongs, setMyLibrarySongs] = useState<Song[]>()
+  const navigate = useNavigate()
   useEffect(() => {
     if (myLibrary.length < 1) {
       dispatch(setUserLibrary())
@@ -19,7 +22,7 @@ function Library (): JSX.Element {
     getLibrarySongInfo().then((data) => {
       setMyLibrarySongs(data)
     })
-  }, [myLibrary])
+  }, [])
   const getLibrarySongInfo = async () => {
     if (token) {
       if (myLibrary.length < 1) {
@@ -29,9 +32,44 @@ function Library (): JSX.Element {
       return tracks as Song[]
     }
   }
+  const createPlaylist = async (userId: string, name: string) => {
+    if(token){
+      const app = await AppRequest(`/users/${userId}/playlists`, token, 'POST', {
+          "name": `${name}`,
+          "description": "New playlist from spoteefy",
+          "public": true
+      })
+      return app
+    }
+  }
+  const addSongsToPlaylist = async (id: string) => {
+    if(token){
+      const app = await AppRequest(`/playlists/${id}/tracks?uris=${
+        myLibrarySongs?.reduce((acc, val, index)=> {
+           return `${acc}${index !==0 ? ',' : ''}${val.uri}`
+          },'')
+      }`, token, 'POST')
+      return app
+    }
+  }
+  const exportLibrary =()=>{
+      const playlist = prompt('Please type in the playlist name')
+    if (userId && playlist){
+      createPlaylist(userId, playlist).then((data) => {
+        addSongsToPlaylist(data.id)
+        .then(() => alert("Playlist has been exported"))
+      }).catch(err => {
+        if(err === 'Auth Error'){
+          dispatch(deleteUserAccessToken())
+          dispatch(setAppError('Authentication Error Please Login again!!'))
+          navigate('/')
+      }
+      })
+    }
+  }
   return (
     <div className='md:px-40 px-3 bg-black/90 min-h-screen'>
-      <Navbar page='library' />
+      <Navbar page='library' exportLib={exportLibrary} />
       <div
         className='sm:h-72 h-40 rounded-3xl mt-6 border border-white/30 flex items-center justify-center' style={{
           backgroundImage: `url(${libraryImage})`,

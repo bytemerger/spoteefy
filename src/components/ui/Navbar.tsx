@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../types/hook.type'
 
 type Page = 'library' | 'home'
 
-const ButtonGroup = ({ page }: {page: Page}) => {
+const ButtonGroup = ({ page, exportLib }: {page: Page; exportLib?: ()=>void}) => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const logout = useCallback(() => {
@@ -17,7 +17,7 @@ const ButtonGroup = ({ page }: {page: Page}) => {
   return (
     <>
       {page === 'library' &&
-        <div className='py-0.5 px-2 sm:py-3 sm:px-5 border rounded-xl border-white text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none mr-3' onClick={logout}>
+        <div className='py-0.5 px-2 sm:py-3 sm:px-5 border rounded-xl border-white text-center bg-transparent  hover:border hover:border-spoteefy-green cursor-pointer ml-5 outline-none mr-3' onClick={exportLib}>
           <div className='flex items-center'>
             <img src={spotiIcon} width={24} height={24} />
             <a className='font-Raleway text-base leading-5 text-white sm:font-semibold'>Export</a>
@@ -37,7 +37,7 @@ const ButtonGroup = ({ page }: {page: Page}) => {
     </>
   )
 }
-function Navbar ({ setSearch, page = 'home' }: { setSearch?: React.Dispatch<React.SetStateAction<string | null>>, page?: Page}) {
+function Navbar ({ setSearch, page = 'home', exportLib }: { setSearch?: React.Dispatch<React.SetStateAction<string | null>>; page?: Page; exportLib?:()=>void}) {
   const username = useAppSelector((state) => state.user.display_name)
   const userImage = useAppSelector((state) => {
     if ((state.user.images != null) && state.user.images.length > 0) return state.user.images[1].url
@@ -58,7 +58,7 @@ function Navbar ({ setSearch, page = 'home' }: { setSearch?: React.Dispatch<Reac
           <span className='hidden sm:block text-white/80 ml-2'>{username}</span>
         </div>
         <div className='items-center flex sm:hidden'>
-          <ButtonGroup page={page} />
+          <ButtonGroup page={page} exportLib = {exportLib} />
         </div>
       </div>
       {
@@ -68,7 +68,7 @@ function Navbar ({ setSearch, page = 'home' }: { setSearch?: React.Dispatch<Reac
         </div>
       }
       <div className='items-center hidden sm:flex'>
-        <ButtonGroup page={page} />
+        <ButtonGroup page={page} exportLib={exportLib} />
       </div>
     </div>
   )
